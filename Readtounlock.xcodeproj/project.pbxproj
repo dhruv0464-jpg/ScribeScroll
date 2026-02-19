@@ -6,14 +6,151 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2D9528F02F466A5300EB2887 /* DeviceActivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9528EF2F466A5300EB2887 /* DeviceActivity.framework */; };
+		2D9528F82F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2D9528ED2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2D9529042F466A9600EB2887 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9529032F466A9600EB2887 /* ManagedSettings.framework */; };
+		2D95290C2F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2D9529022F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2D9529162F466AC100EB2887 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9529032F466A9600EB2887 /* ManagedSettings.framework */; };
+		2D9529282F466AED00EB2887 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9529032F466A9600EB2887 /* ManagedSettings.framework */; };
+		2D95292A2F466AED00EB2887 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9529292F466AED00EB2887 /* ManagedSettingsUI.framework */; };
+		2D9529322F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 2D9529272F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7B1110012F50000100000001 /* PassageLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC4F2F464A750009DF5B /* PassageLibrary.swift */; };
+		7B1110022F50000100000002 /* ReadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC512F464A750009DF5B /* ReadingManager.swift */; };
+		7B1110032F50000100000003 /* ScreenTimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC522F464A750009DF5B /* ScreenTimeManager.swift */; };
+		7B1110042F50000100000004 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC542F464A750009DF5B /* AppState.swift */; };
+		7B1110052F50000100000005 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC552F464A750009DF5B /* Models.swift */; };
+		7B1110062F50000100000006 /* ReadToUnlockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC572F464A750009DF5B /* ReadToUnlockApp.swift */; };
+		7B1110072F50000100000007 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC582F464A750009DF5B /* HomeView.swift */; };
+		7B1110082F50000100000008 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC592F464A750009DF5B /* LibraryView.swift */; };
+		7B1110092F50000100000009 /* StatsSettingsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC5A2F464A750009DF5B /* StatsSettingsViews.swift */; };
+		7B11100A2F5000010000000A /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC5C2F464A750009DF5B /* OnboardingView.swift */; };
+		7B11100B2F5000010000000B /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC5D2F464A750009DF5B /* PaywallView.swift */; };
+		7B11100C2F5000010000000C /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC5E2F464A750009DF5B /* SplashView.swift */; };
+		7B11100D2F5000010000000D /* QuizResultsViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC602F464A750009DF5B /* QuizResultsViews.swift */; };
+		7B11100E2F5000010000000E /* ReadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC612F464A750009DF5B /* ReadingView.swift */; };
+		7B11100F2F5000010000000F /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC632F464A750009DF5B /* DesignSystem.swift */; };
+		7B1110102F50000100000010 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D23EC642F464A750009DF5B /* RootView.swift */; };
+		7B1110122F50000100000012 /* ScreenTimeSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1110112F50000100000011 /* ScreenTimeSetupView.swift */; };
+		7B1110142F50000100000014 /* ScreenTimeShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B1110132F50000100000013 /* ScreenTimeShared.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2D9528F62F466A5300EB2887 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D23EC392F464A5E0009DF5B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D9528EC2F466A5300EB2887;
+			remoteInfo = ReadToUnlockDeviceActivityMonitor;
+		};
+		2D95290A2F466A9600EB2887 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D23EC392F464A5E0009DF5B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D9529012F466A9600EB2887;
+			remoteInfo = ReadToUnlockDeviceShieldConfigurationExtension;
+		};
+		2D9529302F466AED00EB2887 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2D23EC392F464A5E0009DF5B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D9529262F466AED00EB2887;
+			remoteInfo = ReadToUnlockDeviceShieldExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2D9528F92F466A5300EB2887 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2D9529322F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension.appex in Embed Foundation Extensions */,
+				2D9528F82F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor.appex in Embed Foundation Extensions */,
+				2D95290C2F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		2D23EC412F464A5E0009DF5B /* Readtounlock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Readtounlock.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D23EC4F2F464A750009DF5B /* PassageLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassageLibrary.swift; sourceTree = "<group>"; };
+		2D23EC512F464A750009DF5B /* ReadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingManager.swift; sourceTree = "<group>"; };
+		2D23EC522F464A750009DF5B /* ScreenTimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTimeManager.swift; sourceTree = "<group>"; };
+		2D23EC542F464A750009DF5B /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		2D23EC552F464A750009DF5B /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		2D23EC572F464A750009DF5B /* ReadToUnlockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadToUnlockApp.swift; sourceTree = "<group>"; };
+		2D23EC582F464A750009DF5B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		2D23EC592F464A750009DF5B /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		2D23EC5A2F464A750009DF5B /* StatsSettingsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsSettingsViews.swift; sourceTree = "<group>"; };
+		2D23EC5C2F464A750009DF5B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		2D23EC5D2F464A750009DF5B /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		2D23EC5E2F464A750009DF5B /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		2D23EC602F464A750009DF5B /* QuizResultsViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizResultsViews.swift; sourceTree = "<group>"; };
+		2D23EC612F464A750009DF5B /* ReadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingView.swift; sourceTree = "<group>"; };
+		2D23EC632F464A750009DF5B /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		2D23EC642F464A750009DF5B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		2D9528ED2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadToUnlockDeviceActivityMonitor.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D9528EF2F466A5300EB2887 /* DeviceActivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceActivity.framework; path = System/Library/Frameworks/DeviceActivity.framework; sourceTree = SDKROOT; };
+		2D9529022F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadToUnlockDeviceShieldConfigurationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D9529032F466A9600EB2887 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		2D9529152F466AC100EB2887 /* ReadToUnlockDeviceShieldActionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadToUnlockDeviceShieldActionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D9529272F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReadToUnlockDeviceShieldExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D9529292F466AED00EB2887 /* ManagedSettingsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettingsUI.framework; path = System/Library/Frameworks/ManagedSettingsUI.framework; sourceTree = SDKROOT; };
+		7B1110112F50000100000011 /* ScreenTimeSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTimeSetupView.swift; sourceTree = "<group>"; };
+		7B1110132F50000100000013 /* ScreenTimeShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTimeShared.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2D9528FC2F466A5300EB2887 /* Exceptions for "ReadToUnlockDeviceActivityMonitor" folder in "ReadToUnlockDeviceActivityMonitor" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2D9528EC2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */;
+		};
+		2D95290D2F466A9600EB2887 /* Exceptions for "ReadToUnlockDeviceShieldConfigurationExtension" folder in "ReadToUnlockDeviceShieldConfigurationExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2D9529012F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */;
+		};
+		2D9529332F466AED00EB2887 /* Exceptions for "ReadToUnlockDeviceShieldExtension" folder in "ReadToUnlockDeviceShieldExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2D9529262F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2D23EC432F464A5E0009DF5B /* Readtounlock */ = {
+		2D9528F12F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Readtounlock;
+			exceptions = (
+				2D9528FC2F466A5300EB2887 /* Exceptions for "ReadToUnlockDeviceActivityMonitor" folder in "ReadToUnlockDeviceActivityMonitor" target */,
+			);
+			path = ReadToUnlockDeviceActivityMonitor;
+			sourceTree = "<group>";
+		};
+		2D9529052F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2D95290D2F466A9600EB2887 /* Exceptions for "ReadToUnlockDeviceShieldConfigurationExtension" folder in "ReadToUnlockDeviceShieldConfigurationExtension" target */,
+			);
+			path = ReadToUnlockDeviceShieldConfigurationExtension;
+			sourceTree = "<group>";
+		};
+		2D95292B2F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2D9529332F466AED00EB2887 /* Exceptions for "ReadToUnlockDeviceShieldExtension" folder in "ReadToUnlockDeviceShieldExtension" target */,
+			);
+			path = ReadToUnlockDeviceShieldExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,13 +163,54 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2D9528EA2F466A5300EB2887 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D9528F02F466A5300EB2887 /* DeviceActivity.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9528FF2F466A9600EB2887 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D9529042F466A9600EB2887 /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529122F466AC100EB2887 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D9529162F466AC100EB2887 /* ManagedSettings.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529242F466AED00EB2887 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D9529282F466AED00EB2887 /* ManagedSettings.framework in Frameworks */,
+				2D95292A2F466AED00EB2887 /* ManagedSettingsUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		2D23EC382F464A5E0009DF5B = {
 			isa = PBXGroup;
 			children = (
-				2D23EC432F464A5E0009DF5B /* Readtounlock */,
+				2D23EC502F464A750009DF5B /* Data */,
+				2D23EC532F464A750009DF5B /* Managers */,
+				2D23EC562F464A750009DF5B /* Models */,
+				2D23EC572F464A750009DF5B /* ReadToUnlockApp.swift */,
+				2D23EC652F464A750009DF5B /* Views */,
+				2D9528F12F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */,
+				2D9529052F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */,
+				2D95292B2F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */,
+				2D9528EE2F466A5300EB2887 /* Frameworks */,
 				2D23EC422F464A5E0009DF5B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +219,91 @@
 			isa = PBXGroup;
 			children = (
 				2D23EC412F464A5E0009DF5B /* Readtounlock.app */,
+				2D9528ED2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor.appex */,
+				2D9529022F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension.appex */,
+				2D9529152F466AC100EB2887 /* ReadToUnlockDeviceShieldActionExtension.appex */,
+				2D9529272F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2D23EC502F464A750009DF5B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC4F2F464A750009DF5B /* PassageLibrary.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		2D23EC532F464A750009DF5B /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC512F464A750009DF5B /* ReadingManager.swift */,
+				2D23EC522F464A750009DF5B /* ScreenTimeManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		2D23EC562F464A750009DF5B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC542F464A750009DF5B /* AppState.swift */,
+				2D23EC552F464A750009DF5B /* Models.swift */,
+				7B1110132F50000100000013 /* ScreenTimeShared.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2D23EC5B2F464A750009DF5B /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC582F464A750009DF5B /* HomeView.swift */,
+				2D23EC592F464A750009DF5B /* LibraryView.swift */,
+				7B1110112F50000100000011 /* ScreenTimeSetupView.swift */,
+				2D23EC5A2F464A750009DF5B /* StatsSettingsViews.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		2D23EC5F2F464A750009DF5B /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC5C2F464A750009DF5B /* OnboardingView.swift */,
+				2D23EC5D2F464A750009DF5B /* PaywallView.swift */,
+				2D23EC5E2F464A750009DF5B /* SplashView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		2D23EC622F464A750009DF5B /* Reading */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC602F464A750009DF5B /* QuizResultsViews.swift */,
+				2D23EC612F464A750009DF5B /* ReadingView.swift */,
+			);
+			path = Reading;
+			sourceTree = "<group>";
+		};
+		2D23EC652F464A750009DF5B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2D23EC5B2F464A750009DF5B /* Main */,
+				2D23EC5F2F464A750009DF5B /* Onboarding */,
+				2D23EC622F464A750009DF5B /* Reading */,
+				2D23EC632F464A750009DF5B /* DesignSystem.swift */,
+				2D23EC642F464A750009DF5B /* RootView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2D9528EE2F466A5300EB2887 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2D9528EF2F466A5300EB2887 /* DeviceActivity.framework */,
+				2D9529032F466A9600EB2887 /* ManagedSettings.framework */,
+				2D9529292F466AED00EB2887 /* ManagedSettingsUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,13 +316,14 @@
 				2D23EC3D2F464A5E0009DF5B /* Sources */,
 				2D23EC3E2F464A5E0009DF5B /* Frameworks */,
 				2D23EC3F2F464A5E0009DF5B /* Resources */,
+				2D9528F92F466A5300EB2887 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				2D23EC432F464A5E0009DF5B /* Readtounlock */,
+				2D9528F72F466A5300EB2887 /* PBXTargetDependency */,
+				2D95290B2F466A9600EB2887 /* PBXTargetDependency */,
+				2D9529312F466AED00EB2887 /* PBXTargetDependency */,
 			);
 			name = Readtounlock;
 			packageProductDependencies = (
@@ -69,6 +331,91 @@
 			productName = Readtounlock;
 			productReference = 2D23EC412F464A5E0009DF5B /* Readtounlock.app */;
 			productType = "com.apple.product-type.application";
+		};
+		2D9528EC2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D9528FD2F466A5300EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceActivityMonitor" */;
+			buildPhases = (
+				2D9528E92F466A5300EB2887 /* Sources */,
+				2D9528EA2F466A5300EB2887 /* Frameworks */,
+				2D9528EB2F466A5300EB2887 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2D9528F12F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */,
+			);
+			name = ReadToUnlockDeviceActivityMonitor;
+			packageProductDependencies = (
+			);
+			productName = ReadToUnlockDeviceActivityMonitor;
+			productReference = 2D9528ED2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		2D9529012F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D95290E2F466A9600EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceShieldConfigurationExtension" */;
+			buildPhases = (
+				2D9528FE2F466A9600EB2887 /* Sources */,
+				2D9528FF2F466A9600EB2887 /* Frameworks */,
+				2D9529002F466A9600EB2887 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2D9529052F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */,
+			);
+			name = ReadToUnlockDeviceShieldConfigurationExtension;
+			packageProductDependencies = (
+			);
+			productName = ReadToUnlockDeviceShieldConfigurationExtension;
+			productReference = 2D9529022F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		2D9529142F466AC100EB2887 /* ReadToUnlockDeviceShieldActionExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D9529202F466AC100EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceShieldActionExtension" */;
+			buildPhases = (
+				2D9529112F466AC100EB2887 /* Sources */,
+				2D9529122F466AC100EB2887 /* Frameworks */,
+				2D9529132F466AC100EB2887 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReadToUnlockDeviceShieldActionExtension;
+			packageProductDependencies = (
+			);
+			productName = ReadToUnlockDeviceShieldActionExtension;
+			productReference = 2D9529152F466AC100EB2887 /* ReadToUnlockDeviceShieldActionExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		2D9529262F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D9529342F466AED00EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceShieldExtension" */;
+			buildPhases = (
+				2D9529232F466AED00EB2887 /* Sources */,
+				2D9529242F466AED00EB2887 /* Frameworks */,
+				2D9529252F466AED00EB2887 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				2D95292B2F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */,
+			);
+			name = ReadToUnlockDeviceShieldExtension;
+			packageProductDependencies = (
+			);
+			productName = ReadToUnlockDeviceShieldExtension;
+			productReference = 2D9529272F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +428,18 @@
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					2D23EC402F464A5E0009DF5B = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					2D9528EC2F466A5300EB2887 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					2D9529012F466A9600EB2887 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					2D9529142F466AC100EB2887 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					2D9529262F466AED00EB2887 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -100,12 +459,44 @@
 			projectRoot = "";
 			targets = (
 				2D23EC402F464A5E0009DF5B /* Readtounlock */,
+				2D9528EC2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */,
+				2D9529012F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */,
+				2D9529142F466AC100EB2887 /* ReadToUnlockDeviceShieldActionExtension */,
+				2D9529262F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2D23EC3F2F464A5E0009DF5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9528EB2F466A5300EB2887 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529002F466A9600EB2887 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529132F466AC100EB2887 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529252F466AED00EB2887 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -119,10 +510,74 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B1110042F50000100000004 /* AppState.swift in Sources */,
+				7B11100F2F5000010000000F /* DesignSystem.swift in Sources */,
+				7B1110072F50000100000007 /* HomeView.swift in Sources */,
+				7B1110082F50000100000008 /* LibraryView.swift in Sources */,
+				7B1110052F50000100000005 /* Models.swift in Sources */,
+				7B11100A2F5000010000000A /* OnboardingView.swift in Sources */,
+				7B1110012F50000100000001 /* PassageLibrary.swift in Sources */,
+				7B11100B2F5000010000000B /* PaywallView.swift in Sources */,
+				7B11100D2F5000010000000D /* QuizResultsViews.swift in Sources */,
+				7B11100E2F5000010000000E /* ReadingView.swift in Sources */,
+				7B1110022F50000100000002 /* ReadingManager.swift in Sources */,
+				7B1110062F50000100000006 /* ReadToUnlockApp.swift in Sources */,
+				7B1110102F50000100000010 /* RootView.swift in Sources */,
+				7B1110032F50000100000003 /* ScreenTimeManager.swift in Sources */,
+				7B1110142F50000100000014 /* ScreenTimeShared.swift in Sources */,
+				7B1110122F50000100000012 /* ScreenTimeSetupView.swift in Sources */,
+				7B11100C2F5000010000000C /* SplashView.swift in Sources */,
+				7B1110092F50000100000009 /* StatsSettingsViews.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9528E92F466A5300EB2887 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9528FE2F466A9600EB2887 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529112F466AC100EB2887 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D9529232F466AED00EB2887 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2D9528F72F466A5300EB2887 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D9528EC2F466A5300EB2887 /* ReadToUnlockDeviceActivityMonitor */;
+			targetProxy = 2D9528F62F466A5300EB2887 /* PBXContainerItemProxy */;
+		};
+		2D95290B2F466A9600EB2887 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D9529012F466A9600EB2887 /* ReadToUnlockDeviceShieldConfigurationExtension */;
+			targetProxy = 2D95290A2F466A9600EB2887 /* PBXContainerItemProxy */;
+		};
+		2D9529312F466AED00EB2887 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D9529262F466AED00EB2887 /* ReadToUnlockDeviceShieldExtension */;
+			targetProxy = 2D9529302F466AED00EB2887 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2D23EC4A2F464A600009DF5B /* Debug */ = {
@@ -251,6 +706,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZTXWCPKAL7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -263,7 +719,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -282,6 +738,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZTXWCPKAL7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -294,11 +751,235 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2D9528FA2F466A5300EB2887 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceActivityMonitor/ReadToUnlockDeviceActivityMonitor.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceActivityMonitor/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceActivityMonitor;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceActivityMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2D9528FB2F466A5300EB2887 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceActivityMonitor/ReadToUnlockDeviceActivityMonitor.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceActivityMonitor/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceActivityMonitor;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceActivityMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2D95290F2F466A9600EB2887 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceShieldConfigurationExtension/ReadToUnlockDeviceShieldConfigurationExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceShieldConfigurationExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceShieldConfigurationExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceShieldConfigurationExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2D9529102F466A9600EB2887 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceShieldConfigurationExtension/ReadToUnlockDeviceShieldConfigurationExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceShieldConfigurationExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceShieldConfigurationExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceShieldConfigurationExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2D9529212F466AC100EB2887 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceShieldActionExtension/ReadToUnlockDeviceShieldActionExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceShieldActionExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceShieldActionExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceShieldActionExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2D9529222F466AC100EB2887 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceShieldActionExtension/ReadToUnlockDeviceShieldActionExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceShieldActionExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceShieldActionExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceShieldActionExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2D9529352F466AED00EB2887 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceShieldExtension/ReadToUnlockDeviceShieldExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceShieldExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceShieldExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceShieldExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2D9529362F466AED00EB2887 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ReadToUnlockDeviceShieldExtension/ReadToUnlockDeviceShieldExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReadToUnlockDeviceShieldExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ReadToUnlockDeviceShieldExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dhruv.Readtounlockapp.ReadToUnlockDeviceShieldExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -323,6 +1004,42 @@
 			buildConfigurations = (
 				2D23EC4D2F464A600009DF5B /* Debug */,
 				2D23EC4E2F464A600009DF5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D9528FD2F466A5300EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceActivityMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D9528FA2F466A5300EB2887 /* Debug */,
+				2D9528FB2F466A5300EB2887 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D95290E2F466A9600EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceShieldConfigurationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D95290F2F466A9600EB2887 /* Debug */,
+				2D9529102F466A9600EB2887 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D9529202F466AC100EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceShieldActionExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D9529212F466AC100EB2887 /* Debug */,
+				2D9529222F466AC100EB2887 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D9529342F466AED00EB2887 /* Build configuration list for PBXNativeTarget "ReadToUnlockDeviceShieldExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D9529352F466AED00EB2887 /* Debug */,
+				2D9529362F466AED00EB2887 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
