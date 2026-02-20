@@ -598,6 +598,15 @@ struct FreeReadCard: View {
     let onOpen: () -> Void
 
     private var likeCount: Int { item.baseLikeCount + (isLiked ? 1 : 0) }
+    private var titleFontSize: CGFloat {
+        let length = item.title.count
+        if length <= 24 { return 34 }
+        if length <= 42 { return 31 }
+        if length <= 60 { return 28 }
+        if length <= 84 { return 24 }
+        if length <= 110 { return 21 }
+        return 19
+    }
     private var quoteFontSize: CGFloat {
         let length = item.quote.count
         if length <= 70 { return 44 }
@@ -670,10 +679,13 @@ struct FreeReadCard: View {
             .padding(.bottom, 12)
 
             Text(item.title)
-                .font(.system(size: 34, weight: .bold, design: .serif))
+                .font(.system(size: titleFontSize, weight: .bold, design: .serif))
                 .tracking(-0.5)
                 .foregroundStyle(.white)
-                .lineLimit(2)
+                .lineLimit(nil)
+                .minimumScaleFactor(0.75)
+                .allowsTightening(true)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.bottom, 14)
 
             Text("\"\(item.quote)\"")
@@ -770,6 +782,15 @@ struct FreeReadDetailView: View {
     let item: FreeReadFeedItem
     let isLiked: Bool
     let onLike: () -> Void
+    private var titleFontSize: CGFloat {
+        let length = item.title.count
+        if length <= 24 { return 40 }
+        if length <= 42 { return 36 }
+        if length <= 60 { return 33 }
+        if length <= 84 { return 30 }
+        if length <= 110 { return 27 }
+        return 24
+    }
     private var quoteFontSize: CGFloat {
         let length = item.quote.count
         if length <= 70 { return 48 }
@@ -793,10 +814,13 @@ struct FreeReadDetailView: View {
                         .padding(.bottom, 12)
 
                     Text(item.title)
-                        .font(.system(size: 40, weight: .bold, design: .serif))
+                        .font(.system(size: titleFontSize, weight: .bold, design: .serif))
                         .tracking(-0.5)
                         .foregroundStyle(.white)
-                        .lineLimit(3)
+                        .lineLimit(nil)
+                        .minimumScaleFactor(0.75)
+                        .allowsTightening(true)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.bottom, 14)
 
                     Text("\"\(item.quote)\"")
