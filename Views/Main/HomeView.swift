@@ -341,14 +341,17 @@ struct HomeView: View {
     @EnvironmentObject var mgr: ReadingManager
     @EnvironmentObject var screenTime: ScreenTimeManager
     @State private var showScreenTimeSetup = false
+    @State private var showPersonalization = false
+    @AppStorage("personalizationCategoryCSV") private var personalizationCategoryCSV = ""
+    @AppStorage("personalizationPrompt") private var personalizationPrompt = ""
 
-    private let discoverTopics: [(icon: String, title: String, color: Color)] = [
-        ("person.crop.circle.badge.checkmark", "Self-Growth", Color(hex: "9BA96B")),
-        ("bubble.left.and.text.bubble.right", "Communication", Color(hex: "C7AE73")),
-        ("briefcase", "Career & Business", Color(hex: "A87757")),
-        ("book.closed", "Fiction", Color(hex: "8F9978")),
-        ("banknote", "Finance & Economics", Color(hex: "7A8F59")),
-        ("heart", "Relationships", Color(hex: "B7846A")),
+    private let discoverTopics: [(icon: String, title: String, color: Color, category: PassageCategory)] = [
+        ("person.crop.circle.badge.checkmark", "Self-Growth", Color(hex: "9BA96B"), .psychology),
+        ("bubble.left.and.text.bubble.right", "Communication", Color(hex: "C7AE73"), .philosophy),
+        ("briefcase", "Career & Business", Color(hex: "A87757"), .economics),
+        ("book.closed", "Fiction", Color(hex: "8F9978"), .literature),
+        ("banknote", "Finance & Economics", Color(hex: "7A8F59"), .economics),
+        ("heart", "Relationships", Color(hex: "B7846A"), .psychology),
     ]
 
     private let moodPrompts: [(title: String, subtitle: String)] = [
@@ -358,13 +361,45 @@ struct HomeView: View {
         ("After a long day", "wanting calm and reset"),
     ]
 
+    private var preferredCategories: Set<PassageCategory> {
+        decodeStoredCategories(from: personalizationCategoryCSV)
+    }
+
+    private var personalizedFeed: [Passage] {
+        let all = PassageLibrary.all
+        guard !preferredCategories.isEmpty else { return all }
+
+        let prioritized = all.filter { preferredCategories.contains($0.category) }
+        let fallback = all.filter { !preferredCategories.contains($0.category) }
+        return prioritized + fallback
+    }
+
     private var featuredPassages: [Passage] {
-        Array(PassageLibrary.all.prefix(6))
+        Array(personalizedFeed.prefix(6))
     }
 
     private var communityPassages: [Passage] {
-        let pool = PassageLibrary.all.dropFirst(6)
-        return Array(pool.prefix(6))
+        let feed = personalizedFeed
+        if feed.count <= 6 { return feed }
+        return Array(feed.dropFirst(6).prefix(6))
+    }
+
+    private var quickStartPassages: [Passage] {
+        Array(personalizedFeed.prefix(3))
+    }
+
+    private var discoverSubtitle: String {
+        if !personalizationPrompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return personalizationPrompt
+        }
+        if !preferredCategories.isEmpty {
+            return "Your learning plan is active. Pick what to dive into next."
+        }
+        return "Hey \(appState.userName.isEmpty ? "Reader" : appState.userName), pick what to learn next."
+    }
+
+    private var featuredTitle: String {
+        preferredCategories.isEmpty ? "Featured" : "For You"
     }
     
     var body: some View {
@@ -377,7 +412,7 @@ struct HomeView: View {
                             Text("Discover")
                                 .font(.system(size: 42, weight: .bold, design: .serif))
                                 .tracking(-0.8)
-                            Text("Hey \(appState.userName.isEmpty ? "Reader" : appState.userName), pick what to learn next.")
+                            Text(discoverSubtitle)
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundStyle(DS.label3)
                         }
@@ -398,20 +433,37 @@ struct HomeView: View {
                     .padding(.bottom, 14)
 
                     CreateLessonPromptCard {
-                        appState.selectedTab = .library
+                        showPersonalization = true
                     }
                     .padding(.bottom, 14)
+
+                    if !preferredCategories.isEmpty {
+                        PersonalizedPlanSummaryCard(
+                            selectedCategories: preferredCategories,
+                            customPrompt: personalizationPrompt
+                        ) {
+                            showPersonalization = true
+                        }
+                        .padding(.bottom, 14)
+                    }
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(discoverTopics, id: \.title) { topic in
-                                DiscoverTopicChip(icon: topic.icon, title: topic.title, color: topic.color)
+                                DiscoverTopicChip(
+                                    icon: topic.icon,
+                                    title: topic.title,
+                                    color: topic.color,
+                                    isSelected: preferredCategories.contains(topic.category)
+                                ) {
+                                    togglePreferredCategory(topic.category)
+                                }
                             }
                         }
                     }
                     .padding(.bottom, 20)
 
-                    Text("Featured")
+                    Text(featuredTitle)
                         .font(.system(size: 42, weight: .bold, design: .serif))
                         .tracking(-0.7)
                         .padding(.bottom, 10)
@@ -517,13 +569,13 @@ struct HomeView: View {
                     
                     // Suggested readings
                     SectionHeader(
-                        title: "Quick Starts",
+                        title: preferredCategories.isEmpty ? "Quick Starts" : "Quick Starts for Your Plan",
                         trailing: "See All",
                         trailingAction: { appState.selectedTab = .library }
                     )
                     .padding(.bottom, 12)
                     
-                    ForEach(Array(PassageLibrary.all.prefix(3))) { passage in
+                    ForEach(quickStartPassages) { passage in
                         ReadingCard(passage: passage) {
                             appState.startReading(passage)
                         }
@@ -544,6 +596,23 @@ struct HomeView: View {
             ScreenTimeSetupView()
                 .environmentObject(screenTime)
         }
+        .fullScreenCover(isPresented: $showPersonalization) {
+            PersonalizationPlanView(
+                isPresented: $showPersonalization,
+                storedCategoryCSV: $personalizationCategoryCSV,
+                customPrompt: $personalizationPrompt
+            )
+        }
+    }
+
+    private func togglePreferredCategory(_ category: PassageCategory) {
+        var updated = preferredCategories
+        if updated.contains(category) {
+            updated.remove(category)
+        } else {
+            updated.insert(category)
+        }
+        personalizationCategoryCSV = encodeStoredCategories(updated)
     }
 }
 
@@ -600,24 +669,451 @@ struct DiscoverTopicChip: View {
     let icon: String
     let title: String
     let color: Color
+    var isSelected: Bool = false
+    var action: (() -> Void)? = nil
 
     var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(color)
+        Button(action: { action?() }) {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(isSelected ? .black : color)
 
-            Text(title)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(DS.label2)
+                Text(title)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(isSelected ? .black : DS.label2)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(isSelected ? color : DS.surface)
+            .clipShape(Capsule())
+            .overlay(
+                Capsule().strokeBorder(isSelected ? color : DS.separator, lineWidth: 1)
+            )
         }
+        .buttonStyle(.plain)
+    }
+}
+
+struct PersonalizedPlanSummaryCard: View {
+    let selectedCategories: Set<PassageCategory>
+    let customPrompt: String
+    let editAction: () -> Void
+
+    private var summaryText: String {
+        let prompt = customPrompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !prompt.isEmpty { return prompt }
+        return selectedCategories
+            .map(\.rawValue)
+            .sorted()
+            .joined(separator: " • ")
+    }
+
+    var body: some View {
+        Button(action: editAction) {
+            HStack(spacing: 12) {
+                RoundedRectangle(cornerRadius: 11)
+                    .fill(DS.accent.opacity(0.18))
+                    .frame(width: 42, height: 42)
+                    .overlay(
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundStyle(DS.accent)
+                    )
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Your Personal Learning Plan")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.white)
+                    Text(summaryText)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(DS.label3)
+                        .lineLimit(2)
+                }
+
+                Spacer()
+
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(DS.label3)
+            }
+            .padding(12)
+            .background(DS.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(DS.separator, lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct PersonalizationPlan: Identifiable {
+    let id: String
+    let title: String
+    let planCount: Int
+    let categories: Set<PassageCategory>
+    let symbol: String
+    let colors: [Color]
+}
+
+struct PersonalizationPlanView: View {
+    @Binding var isPresented: Bool
+    @Binding var storedCategoryCSV: String
+    @Binding var customPrompt: String
+
+    @State private var draftPrompt = ""
+    @State private var selectedCategories: Set<PassageCategory> = []
+
+    private let planCards: [PersonalizationPlan] = [
+        PersonalizationPlan(
+            id: "career",
+            title: "Career & Leadership",
+            planCount: 12,
+            categories: [.economics, .technology, .history],
+            symbol: "person.crop.square.filled.and.at.rectangle",
+            colors: [Color(hex: "30464F"), Color(hex: "6C5F46"), Color(hex: "1A1F1A")]
+        ),
+        PersonalizationPlan(
+            id: "finance",
+            title: "Finance",
+            planCount: 6,
+            categories: [.economics, .mathematics],
+            symbol: "banknote.fill",
+            colors: [Color(hex: "1E2C33"), Color(hex: "3B2A1D"), Color(hex: "141A18")]
+        ),
+        PersonalizationPlan(
+            id: "philosophy-history",
+            title: "Philosophy & History",
+            planCount: 9,
+            categories: [.philosophy, .history, .literature],
+            symbol: "building.columns.fill",
+            colors: [Color(hex: "26333A"), Color(hex: "5C5642"), Color(hex: "171A16")]
+        ),
+        PersonalizationPlan(
+            id: "productivity",
+            title: "Productivity",
+            planCount: 7,
+            categories: [.psychology, .technology, .science],
+            symbol: "clock.fill",
+            colors: [Color(hex: "2C3E4A"), Color(hex: "6A6046"), Color(hex: "191D18")]
+        ),
+        PersonalizationPlan(
+            id: "relationships",
+            title: "Relationships",
+            planCount: 8,
+            categories: [.psychology, .literature],
+            symbol: "person.2.fill",
+            colors: [Color(hex: "2E414B"), Color(hex: "5E6D76"), Color(hex: "1A1C1A")]
+        ),
+        PersonalizationPlan(
+            id: "social-skills",
+            title: "Social Skills",
+            planCount: 14,
+            categories: [.psychology, .philosophy],
+            symbol: "person.3.fill",
+            colors: [Color(hex: "21303A"), Color(hex: "544B39"), Color(hex: "181B17")]
+        ),
+    ]
+
+    private let categoryColumns = [GridItem(.adaptive(minimum: 112), spacing: 8)]
+    private let planColumns = [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [DS.bg, Color(hex: "0D100D"), Color(hex: "080907")],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+
+            VStack(spacing: 0) {
+                header
+
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        offerBanner
+                            .padding(.bottom, 18)
+
+                        Text("Build my own")
+                            .font(.system(size: 20, weight: .bold, design: .serif))
+                            .padding(.bottom, 8)
+
+                        TextEditor(text: $draftPrompt)
+                            .scrollContentBackground(.hidden)
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundStyle(.white)
+                            .frame(minHeight: 88, maxHeight: 120)
+                            .padding(12)
+                            .background(DS.surface)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .strokeBorder(DS.separator, lineWidth: 1)
+                            )
+                            .padding(.bottom, 10)
+                            .overlay(alignment: .topLeading) {
+                                if draftPrompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    Text("I want to get better at public speaking and confidence...")
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundStyle(DS.label4)
+                                        .padding(.leading, 24)
+                                        .padding(.top, 24)
+                                        .allowsHitTesting(false)
+                                }
+                            }
+
+                        Button {
+                            generatePlanFromPrompt()
+                        } label: {
+                            HStack(spacing: 7) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 12, weight: .bold))
+                                Text("Generate my plan")
+                                    .font(.system(size: 16, weight: .bold))
+                            }
+                            .foregroundStyle(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(hex: "EAE3D8"))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.bottom, 18)
+
+                        Text("Trending plans")
+                            .font(.system(size: 34, weight: .bold, design: .serif))
+                            .tracking(-0.6)
+                            .padding(.bottom, 10)
+
+                        LazyVGrid(columns: planColumns, spacing: 10) {
+                            ForEach(planCards) { plan in
+                                PersonalizationPlanCard(
+                                    plan: plan,
+                                    isSelected: plan.categories.isSubset(of: selectedCategories)
+                                ) {
+                                    togglePlan(plan)
+                                }
+                            }
+                        }
+                        .padding(.bottom, 20)
+
+                        Text("Fine tune your categories")
+                            .font(.system(size: 18, weight: .bold))
+                            .padding(.bottom, 10)
+
+                        LazyVGrid(columns: categoryColumns, spacing: 8) {
+                            ForEach(PassageCategory.allCases, id: \.self) { category in
+                                Button {
+                                    toggleCategory(category)
+                                } label: {
+                                    Text(category.rawValue)
+                                        .font(.system(size: 12, weight: .bold))
+                                        .foregroundStyle(selectedCategories.contains(category) ? .black : DS.label2)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 10)
+                                        .frame(maxWidth: .infinity)
+                                        .background(selectedCategories.contains(category) ? category.color : DS.surface)
+                                        .clipShape(Capsule())
+                                        .overlay(
+                                            Capsule()
+                                                .strokeBorder(selectedCategories.contains(category) ? category.color : DS.separator, lineWidth: 1)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.bottom, 100)
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 8) {
+                    Text("\(selectedCategories.count) categories selected")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(DS.label3)
+
+                    PrimaryButton(title: "Save My Plan", icon: "checkmark") {
+                        saveAndClose()
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .padding(.bottom, 10)
+                .background(
+                    LinearGradient(
+                        colors: [DS.bg.opacity(0.0), DS.bg.opacity(0.94), DS.bg],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+            }
+        }
+        .onAppear {
+            selectedCategories = decodeStoredCategories(from: storedCategoryCSV)
+            draftPrompt = customPrompt
+        }
+    }
+
+    private var header: some View {
+        HStack {
+            Text("Set my plan")
+                .font(.system(size: 42, weight: .bold, design: .serif))
+                .tracking(-0.7)
+
+            Spacer()
+
+            Button {
+                isPresented = false
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(DS.label3)
+                    .frame(width: 36, height: 36)
+                    .background(DS.surface2)
+                    .clipShape(Circle())
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 6)
+        .padding(.bottom, 14)
+    }
+
+    private var offerBanner: some View {
+        HStack {
+            Text("Special Offer")
+                .font(.system(size: 13, weight: .bold))
+            Spacer()
+            Text("Save 40%+ with annual plan")
+                .font(.system(size: 13, weight: .bold))
+        }
+        .foregroundStyle(.black.opacity(0.8))
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
-        .background(DS.surface)
-        .clipShape(Capsule())
-        .overlay(
-            Capsule().strokeBorder(DS.separator, lineWidth: 1)
+        .background(
+            LinearGradient(
+                colors: [Color(hex: "A89A7A"), Color(hex: "C2B58E"), Color(hex: "8E8272")],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
         )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func togglePlan(_ plan: PersonalizationPlan) {
+        if plan.categories.isSubset(of: selectedCategories) {
+            selectedCategories.subtract(plan.categories)
+        } else {
+            selectedCategories.formUnion(plan.categories)
+        }
+    }
+
+    private func toggleCategory(_ category: PassageCategory) {
+        if selectedCategories.contains(category) {
+            selectedCategories.remove(category)
+        } else {
+            selectedCategories.insert(category)
+        }
+    }
+
+    private func saveAndClose() {
+        storedCategoryCSV = encodeStoredCategories(selectedCategories)
+        customPrompt = draftPrompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        isPresented = false
+    }
+
+    private func generatePlanFromPrompt() {
+        let prompt = draftPrompt.lowercased()
+        guard !prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return
+        }
+
+        let keywordMap: [(PassageCategory, [String])] = [
+            (.economics, ["finance", "money", "business", "career", "invest"]),
+            (.psychology, ["mind", "habit", "focus", "confidence", "social", "relationship"]),
+            (.history, ["history", "ancient", "war", "civilization", "rome"]),
+            (.philosophy, ["philosophy", "stoic", "ethics", "meaning", "thinking"]),
+            (.science, ["science", "biology", "physics", "brain", "health"]),
+            (.technology, ["tech", "ai", "startup", "coding", "digital"]),
+            (.literature, ["fiction", "story", "books", "writing", "novel"]),
+            (.mathematics, ["math", "quant", "logic", "statistics", "data"]),
+        ]
+
+        var inferred: Set<PassageCategory> = []
+        for (category, keywords) in keywordMap where keywords.contains(where: { prompt.contains($0) }) {
+            inferred.insert(category)
+        }
+
+        if inferred.isEmpty {
+            inferred = [.psychology, .history, .science]
+        }
+
+        withAnimation(.easeInOut(duration: 0.25)) {
+            selectedCategories.formUnion(inferred)
+        }
+    }
+}
+
+struct PersonalizationPlanCard: View {
+    let plan: PersonalizationPlan
+    let isSelected: Bool
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            ZStack(alignment: .bottomLeading) {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(
+                        LinearGradient(
+                            colors: plan.colors,
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+
+                RadialGradient(
+                    colors: [Color.white.opacity(0.18), Color.clear],
+                    center: .topLeading,
+                    startRadius: 10,
+                    endRadius: 120
+                )
+
+                Image(systemName: plan.symbol)
+                    .font(.system(size: 74, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.2))
+                    .offset(x: 44, y: 8)
+
+                Rectangle()
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.black.opacity(0.0), Color.black.opacity(0.68)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(plan.title)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundStyle(.white)
+                        .lineLimit(2)
+                    Text("\(plan.planCount) plans")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.84))
+                }
+                .padding(12)
+            }
+            .frame(height: 146)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(isSelected ? DS.accent : Color.white.opacity(0.16), lineWidth: isSelected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -934,4 +1430,15 @@ struct BlockedAppRow: View {
         }
         .buttonStyle(.plain)
     }
+}
+
+private func decodeStoredCategories(from rawValue: String) -> Set<PassageCategory> {
+    Set(rawValue.split(separator: ",").compactMap { PassageCategory(rawValue: String($0)) })
+}
+
+private func encodeStoredCategories(_ categories: Set<PassageCategory>) -> String {
+    categories
+        .map(\.rawValue)
+        .sorted()
+        .joined(separator: ",")
 }
