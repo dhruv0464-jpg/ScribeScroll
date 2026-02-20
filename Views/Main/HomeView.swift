@@ -46,73 +46,111 @@ struct MainTabView: View {
     }
 }
 
-struct FreeReadFeedItem {
-    let passage: Passage
-    let excerpt: String
-    let segmentIndex: Int
-    let totalSegments: Int
+struct FreeReadStory {
+    let id: String
+    let title: String
+    let quote: String
+    let body: String
+    let category: PassageCategory
+    let source: String
+    let symbol: String
+    let palette: [Color]
+}
 
-    var stableID: String { "\(passage.id)-\(segmentIndex)" }
+struct FreeReadFeedItem {
+    let stableID: String
+    let title: String
+    let quote: String
+    let body: String
+    let category: PassageCategory
+    let source: String
+    let symbol: String
+    let palette: [Color]
+    let sequenceLabel: String
+
+    var visualSeed: Int {
+        FreeReadFeedItem.deterministicSeed(stableID)
+    }
 
     var baseLikeCount: Int {
-        120 + ((passage.id * 89 + segmentIndex * 41) % 9200)
+        220 + (visualSeed % 9400)
     }
 
     var shareText: String {
-        "\"\(excerpt)\"\n\nFrom: \(passage.title) • \(passage.category.rawValue)\nShared from Readtounlock"
+        let preview = body.count > 320 ? "\(body.prefix(320))..." : body
+        return "\"\(quote)\"\n\n\(preview)\n\n\(source)\nShared from Readtounlock"
     }
 
     static let seedPool: [FreeReadFeedItem] = buildSeedPool()
 
     private static func buildSeedPool() -> [FreeReadFeedItem] {
-        let normalized: [(Passage, [String])] = PassageLibrary.all.map { passage in
-            let segments = splitIntoSegments(passage.content)
-            return (passage, segments.isEmpty ? [passage.content.trimmingCharacters(in: .whitespacesAndNewlines)] : segments)
+        let curated = curatedStories.map { story in
+            FreeReadFeedItem(
+                stableID: "story-\(story.id)",
+                title: story.title,
+                quote: story.quote,
+                body: story.body,
+                category: story.category,
+                source: story.source,
+                symbol: story.symbol,
+                palette: story.palette,
+                sequenceLabel: "Editorial"
+            )
         }
 
-        let maxSegments = normalized.map { $0.1.count }.max() ?? 0
-        var pool: [FreeReadFeedItem] = []
+        let passageDerived = buildPassageDerivedFeedItems()
+        return curated + passageDerived
+    }
 
-        for segmentOffset in 0..<maxSegments {
-            for (passage, segments) in normalized {
-                guard segmentOffset < segments.count else { continue }
-                pool.append(
+    private static func buildPassageDerivedFeedItems() -> [FreeReadFeedItem] {
+        var items: [FreeReadFeedItem] = []
+
+        for passage in PassageLibrary.all {
+            let segments = splitIntoSegments(passage.content)
+            guard !segments.isEmpty else { continue }
+
+            for (index, segment) in segments.prefix(2).enumerated() {
+                items.append(
                     FreeReadFeedItem(
-                        passage: passage,
-                        excerpt: segments[segmentOffset],
-                        segmentIndex: segmentOffset + 1,
-                        totalSegments: segments.count
+                        stableID: "library-\(passage.id)-\(index)",
+                        title: passage.title,
+                        quote: quoteFromSegment(segment),
+                        body: segment,
+                        category: passage.category,
+                        source: "From library: \(passage.source)",
+                        symbol: passage.category.icon,
+                        palette: palette(for: passage.category),
+                        sequenceLabel: "Library \(index + 1)/\(segments.count)"
                     )
                 )
             }
         }
 
-        return pool
+        return items
     }
 
-    // Build longer reel cards: each item is a coherent multi-paragraph chunk.
     private static func splitIntoSegments(_ content: String) -> [String] {
         let paragraphs = content
             .components(separatedBy: "\n\n")
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { $0.count > 40 }
+            .filter { $0.count > 45 }
 
         guard !paragraphs.isEmpty else { return [] }
 
-        let targetChars = 950
+        let targetChars = 680
         var segments: [String] = []
         var current: [String] = []
-        var currentCount = 0
+        var count = 0
 
         for paragraph in paragraphs {
-            let nextCount = currentCount + paragraph.count + (current.isEmpty ? 0 : 2)
+            let nextCount = count + paragraph.count + (current.isEmpty ? 0 : 2)
             if !current.isEmpty && nextCount > targetChars {
                 segments.append(current.joined(separator: "\n\n"))
                 current = [paragraph]
-                currentCount = paragraph.count
+                count = paragraph.count
             } else {
                 current.append(paragraph)
-                currentCount = nextCount
+                count = nextCount
             }
         }
 
@@ -122,6 +160,234 @@ struct FreeReadFeedItem {
 
         return segments
     }
+
+    private static func quoteFromSegment(_ segment: String) -> String {
+        let flattened = segment.replacingOccurrences(of: "\n", with: " ")
+        let sentences = flattened
+            .split(whereSeparator: { ".!?".contains($0) })
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { $0.count > 35 }
+
+        if let first = sentences.first {
+            return first.count > 118 ? "\(first.prefix(118))..." : first
+        }
+
+        return flattened.count > 118 ? "\(flattened.prefix(118))..." : flattened
+    }
+
+    private static func deterministicSeed(_ value: String) -> Int {
+        value.unicodeScalars.reduce(0) { current, scalar in
+            (current * 33 + Int(scalar.value)) % 10_000
+        }
+    }
+
+    private static func palette(for category: PassageCategory) -> [Color] {
+        switch category {
+        case .science: return [Color(hex: "2A427B"), Color(hex: "1B2748"), Color(hex: "0B152E")]
+        case .history: return [Color(hex: "3C3F6E"), Color(hex: "232C56"), Color(hex: "121A38")]
+        case .philosophy: return [Color(hex: "2E4A7A"), Color(hex: "1A315C"), Color(hex: "0D1B3D")]
+        case .economics: return [Color(hex: "2B3D70"), Color(hex: "172A52"), Color(hex: "0C1736")]
+        case .psychology: return [Color(hex: "3A4E8A"), Color(hex: "1C2F63"), Color(hex: "101E43")]
+        case .literature: return [Color(hex: "384C86"), Color(hex: "1F315A"), Color(hex: "0F1C3D")]
+        case .mathematics: return [Color(hex: "3B508F"), Color(hex: "20366A"), Color(hex: "101F47")]
+        case .technology: return [Color(hex: "2A4378"), Color(hex: "182E5A"), Color(hex: "0D1B3F")]
+        }
+    }
+
+    private static let curatedStories: [FreeReadStory] = [
+        FreeReadStory(
+            id: "attention-room",
+            title: "Attention Is a Room",
+            quote: "Where your attention sits, your life gets built.",
+            body: """
+            Most people treat attention like weather, something that happens to them. But attention behaves more like architecture. Every notification, open tab, and unfinished thread is furniture inside your mental room.
+
+            If that room is crowded, your thinking feels expensive. If it is clear, ideas connect fast. The quality of your decisions is often less about intelligence and more about how clean your room is before you decide.
+
+            Tonight, remove one source of noise and read one thing deeply. Protecting a single focused hour is not a productivity trick. It is identity work.
+            """,
+            category: .psychology,
+            source: "ReadToUnlock Editorial",
+            symbol: "sparkles.rectangle.stack.fill",
+            palette: [Color(hex: "2E4A83"), Color(hex: "1A315E"), Color(hex: "0D1C3F")]
+        ),
+        FreeReadStory(
+            id: "borrowed-urgency",
+            title: "Stop Borrowing Urgency",
+            quote: "If everything feels urgent, none of it was chosen.",
+            body: """
+            Digital feeds train us to inherit urgency from strangers. A hot take, a trend, a deadline that is not yours, and suddenly your nervous system is sprinting without a map.
+
+            Borrowed urgency creates shallow work and restless evenings. Chosen urgency creates momentum. One is panic. The other is leadership.
+
+            Before opening your next app, ask: what actually matters in the next hour? Write one sentence. Then let that sentence be louder than the feed.
+            """,
+            category: .philosophy,
+            source: "ReadToUnlock Editorial",
+            symbol: "flame.fill",
+            palette: [Color(hex: "2B3F72"), Color(hex: "182955"), Color(hex: "0D1737")]
+        ),
+        FreeReadStory(
+            id: "small-decisions",
+            title: "Why Small Decisions Drain You",
+            quote: "Decision fatigue is not weakness. It is unbudgeted energy.",
+            body: """
+            The brain spends fuel on every choice, even tiny ones. What to wear, what to reply, what to open next. None of these feels heavy alone, but together they tax your control systems.
+
+            High performers do not avoid decisions. They automate the trivial so they can spend energy where stakes are real. Same breakfast, fixed focus blocks, fewer app switches.
+
+            Make one default rule today. Keep your energy for the decisions that shape tomorrow.
+            """,
+            category: .science,
+            source: "ReadToUnlock Editorial",
+            symbol: "brain.head.profile",
+            palette: [Color(hex: "3A4E8A"), Color(hex: "1F3464"), Color(hex: "0F2044")]
+        ),
+        FreeReadStory(
+            id: "twenty-minutes",
+            title: "The Quiet Compounding of 20 Minutes",
+            quote: "Twenty focused minutes daily can outrun random two-hour bursts.",
+            body: """
+            People underestimate steady effort because it looks small in the moment. But compounding never announces itself early. It looks ordinary until it looks inevitable.
+
+            One page a day becomes thirty books in a few years. One note daily becomes a personal archive of ideas. One clear session beats five distracted marathons.
+
+            Protect a non-negotiable 20-minute reading block. Future you will call it leverage.
+            """,
+            category: .economics,
+            source: "ReadToUnlock Editorial",
+            symbol: "chart.line.uptrend.xyaxis",
+            palette: [Color(hex: "2F477F"), Color(hex: "1A2F5D"), Color(hex: "0E1D41")]
+        ),
+        FreeReadStory(
+            id: "social-courage",
+            title: "Social Courage Is Trainable",
+            quote: "Confidence often arrives after action, not before it.",
+            body: """
+            We wait to feel ready before speaking up, introducing ourselves, or asking better questions. But readiness rarely appears first. Repetition creates readiness.
+
+            Social courage grows from small reps: one thoughtful message, one honest question, one uncomfortable but respectful conversation. Neural pathways care more about frequency than intensity.
+
+            Your next brave moment can be tiny. Tiny still counts.
+            """,
+            category: .psychology,
+            source: "ReadToUnlock Editorial",
+            symbol: "person.2.wave.2.fill",
+            palette: [Color(hex: "385093"), Color(hex: "21366A"), Color(hex: "102145")]
+        ),
+        FreeReadStory(
+            id: "history-patterns",
+            title: "History Rewards Pattern Hunters",
+            quote: "History does not repeat exactly, but it rhymes loudly.",
+            body: """
+            Great readers of history are not memorizing dates for trivia points. They are training pattern recognition under pressure: incentives, power shifts, overconfidence, recovery.
+
+            When you study prior cycles, current headlines become less confusing. You can separate noise from signal because you have seen this shape before, just in different clothes.
+
+            Read one historical case this week and ask: what human pattern is timeless here?
+            """,
+            category: .history,
+            source: "ReadToUnlock Editorial",
+            symbol: "building.columns.fill",
+            palette: [Color(hex: "33457E"), Color(hex: "1D2F61"), Color(hex: "101F44")]
+        ),
+        FreeReadStory(
+            id: "read-like-builder",
+            title: "Read Like a Builder",
+            quote: "Do not read to finish pages. Read to build mental tools.",
+            body: """
+            Passive reading feels productive but often evaporates by evening. Builder reading is different. You capture one model, one question, one application for your real life.
+
+            The strongest readers annotate in outcomes: what decision will this improve? what behavior should change? what assumption did this challenge?
+
+            A single implemented insight is worth more than ten highlighted chapters.
+            """,
+            category: .technology,
+            source: "ReadToUnlock Editorial",
+            symbol: "hammer.fill",
+            palette: [Color(hex: "2B4479"), Color(hex: "19305F"), Color(hex: "0D1E43")]
+        ),
+        FreeReadStory(
+            id: "context-switching",
+            title: "The Hidden Tax of Context Switching",
+            quote: "Every switch leaves cognitive residue.",
+            body: """
+            Moving from app to app feels harmless because each jump is short. The cost shows up later as slower recall, fuzzy priorities, and mental drag.
+
+            Your brain needs re-entry time each time attention shifts. That overhead can consume more than the task itself when interruptions are constant.
+
+            Batch similar tasks. Read in uninterrupted chunks. Defend transitions as seriously as you defend deadlines.
+            """,
+            category: .science,
+            source: "ReadToUnlock Editorial",
+            symbol: "arrow.left.arrow.right.square.fill",
+            palette: [Color(hex: "304C86"), Color(hex: "1D3668"), Color(hex: "0F2246")]
+        ),
+        FreeReadStory(
+            id: "math-of-weeks",
+            title: "The Math of Better Weeks",
+            quote: "A good week is designed, not discovered.",
+            body: """
+            If your week has no structure, mood becomes strategy. You work hard but drift. A simple weekly map changes everything: deep work blocks, reading windows, reflection slots.
+
+            Mathematically, even a 10 percent improvement in each day creates a week that feels radically different. Direction compounds faster than intensity.
+
+            Sunday planning is not bureaucracy. It is pre-commitment to the person you want to be by Friday.
+            """,
+            category: .mathematics,
+            source: "ReadToUnlock Editorial",
+            symbol: "function",
+            palette: [Color(hex: "36549A"), Color(hex: "203A71"), Color(hex: "11244A")]
+        ),
+        FreeReadStory(
+            id: "quality-inputs",
+            title: "Your Inputs Become Your Inner Voice",
+            quote: "What you read repeatedly becomes how you think automatically.",
+            body: """
+            Most people protect their schedules but ignore their informational diet. Yet thoughts are made of inputs. Scroll chaos leads to chaotic thinking. High signal inputs create clear internal language.
+
+            Curate your feed like an athlete curates nutrition. Fewer empty calories. More dense material that sharpens judgment.
+
+            You do not need perfect discipline. You need better defaults.
+            """,
+            category: .literature,
+            source: "ReadToUnlock Editorial",
+            symbol: "text.book.closed.fill",
+            palette: [Color(hex: "324B84"), Color(hex: "1C335F"), Color(hex: "0E2044")]
+        ),
+        FreeReadStory(
+            id: "one-question",
+            title: "One Question Before Any App",
+            quote: "Open with intention or be opened by the algorithm.",
+            body: """
+            Most app sessions begin unconsciously. A small pause changes the whole session: what am I here to do in the next ten minutes?
+
+            That question restores agency. Suddenly, scrolling becomes a choice with boundaries, not a default with no end state.
+
+            Intentional use does not mean never relaxing. It means deciding before the feed decides for you.
+            """,
+            category: .technology,
+            source: "ReadToUnlock Editorial",
+            symbol: "app.badge.checkmark",
+            palette: [Color(hex: "2C4275"), Color(hex: "182B57"), Color(hex: "0D1A3B")]
+        ),
+        FreeReadStory(
+            id: "long-view",
+            title: "The Long View Beats the Loud Moment",
+            quote: "Do not trade long-term clarity for short-term stimulation.",
+            body: """
+            The modern attention economy is optimized for now. But most meaningful outcomes live in later: skills, trust, reputation, mastery.
+
+            When you choose reading over reflexive scrolling, you are not rejecting fun. You are investing in a broader timeline where your decisions gain weight.
+
+            Ask what future this next hour belongs to. Then act accordingly.
+            """,
+            category: .philosophy,
+            source: "ReadToUnlock Editorial",
+            symbol: "hourglass.bottomhalf.filled",
+            palette: [Color(hex: "30467D"), Color(hex: "1A2F5A"), Color(hex: "0D1C40")]
+        ),
+    ]
 }
 
 struct FreeReadRenderItem: Identifiable {
@@ -130,14 +396,14 @@ struct FreeReadRenderItem: Identifiable {
 }
 
 struct FreeReadView: View {
-    private let likesStorageKey = "freeReadLikedPassageIDs"
+    private let likesStorageKey = "freeReadLikedStoryIDs"
     private let batchSize = 24
     private let prefetchThreshold = 8
 
     @State private var feed: [FreeReadRenderItem] = []
     @State private var seedPool: [FreeReadFeedItem] = []
     @State private var seedCursor: Int = 0
-    @State private var likedPassageIDs: Set<Int> = Set(UserDefaults.standard.array(forKey: "freeReadLikedPassageIDs") as? [Int] ?? [])
+    @State private var likedStoryIDs: Set<String> = Set(UserDefaults.standard.array(forKey: "freeReadLikedStoryIDs") as? [String] ?? [])
 
     var body: some View {
         GeometryReader { geo in
@@ -146,7 +412,7 @@ struct FreeReadView: View {
                     ForEach(Array(feed.enumerated()), id: \.element.id) { index, item in
                         FreeReadCard(
                             item: item.content,
-                            isLiked: likedPassageIDs.contains(item.content.passage.id),
+                            isLiked: likedStoryIDs.contains(item.content.stableID),
                             onLike: { toggleLike(for: item.content) }
                         )
                         .frame(width: geo.size.width, height: geo.size.height)
@@ -196,12 +462,12 @@ struct FreeReadView: View {
     }
 
     private func toggleLike(for item: FreeReadFeedItem) {
-        if likedPassageIDs.contains(item.passage.id) {
-            likedPassageIDs.remove(item.passage.id)
+        if likedStoryIDs.contains(item.stableID) {
+            likedStoryIDs.remove(item.stableID)
         } else {
-            likedPassageIDs.insert(item.passage.id)
+            likedStoryIDs.insert(item.stableID)
         }
-        UserDefaults.standard.set(Array(likedPassageIDs), forKey: likesStorageKey)
+        UserDefaults.standard.set(Array(likedStoryIDs), forKey: likesStorageKey)
     }
 }
 
@@ -214,28 +480,13 @@ struct FreeReadCard: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            LinearGradient(
-                colors: [
-                    DS.bg,
-                    item.passage.category.color.opacity(0.26),
-                    DS.bg
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .overlay(
-                LinearGradient(
-                    colors: [Color.black.opacity(0.1), Color.black.opacity(0.0), Color.black.opacity(0.28)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .ignoresSafeArea()
+            backgroundLayer
+                .ignoresSafeArea()
 
             contentOverlay
                 .padding(.leading, 20)
                 .padding(.trailing, 88)
-                .padding(.bottom, 32)
+                .padding(.bottom, 28)
 
             actionRail
                 .padding(.trailing, 12)
@@ -244,48 +495,127 @@ struct FreeReadCard: View {
         .background(DS.bg)
     }
 
+    private var backgroundLayer: some View {
+        LinearGradient(
+            colors: [
+                item.palette[2].opacity(0.88),
+                DS.bg,
+                item.palette[0].opacity(0.35)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .overlay(StarFieldOverlay(seed: item.visualSeed, starCount: 30))
+        .overlay(
+            LinearGradient(
+                colors: [Color.black.opacity(0.15), Color.black.opacity(0.0), Color.black.opacity(0.34)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
+
     private var contentOverlay: some View {
         VStack(alignment: .leading, spacing: 0) {
             Spacer()
 
             HStack(spacing: 8) {
-                Text(item.passage.category.rawValue.uppercased())
+                Text(item.category.rawValue.uppercased())
                     .font(.system(size: 11, weight: .black))
                     .tracking(0.8)
                     .foregroundStyle(.black)
                     .padding(.horizontal, 9)
                     .padding(.vertical, 4)
-                    .background(item.passage.category.color)
+                    .background(item.category.color)
                     .clipShape(Capsule())
 
-                Text("Part \(item.segmentIndex)/\(item.totalSegments)")
+                Text(item.sequenceLabel)
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(DS.label4)
             }
             .padding(.bottom, 10)
 
-            Text(item.passage.title)
-                .font(.system(size: 24, weight: .bold))
-                .tracking(-0.5)
-                .lineLimit(2)
-                .foregroundStyle(.white)
-                .padding(.bottom, 10)
+            coverArt
+                .padding(.bottom, 12)
 
-            Text(item.excerpt)
-                .font(.system(size: 16.5, weight: .medium))
+            Text("\"\(item.quote)\"")
+                .font(.system(size: 25, weight: .bold, design: .serif))
+                .tracking(-0.4)
+                .lineLimit(3)
+                .foregroundStyle(.white)
+                .padding(.bottom, 8)
+
+            Text(item.body)
+                .font(.system(size: 16, weight: .medium))
                 .lineSpacing(6)
                 .foregroundStyle(DS.label2)
-                .lineLimit(18)
-                .padding(.bottom, 10)
+                .lineLimit(11)
+                .padding(.bottom, 8)
+
+            Text(item.source)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundStyle(DS.label4)
+                .lineLimit(1)
+                .padding(.bottom, 8)
 
             HStack(spacing: 5) {
                 Image(systemName: "arrow.up")
                     .font(.system(size: 10, weight: .bold))
-                Text("Swipe for next")
+                Text("Swipe for next story")
                     .font(.system(size: 11, weight: .semibold))
             }
             .foregroundStyle(DS.label4)
         }
+    }
+
+    private var coverArt: some View {
+        ZStack(alignment: .bottomLeading) {
+            RoundedRectangle(cornerRadius: 22)
+                .fill(
+                    LinearGradient(
+                        colors: item.palette,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+
+            StarFieldOverlay(seed: item.visualSeed + 901, starCount: 18)
+                .clipShape(RoundedRectangle(cornerRadius: 22))
+                .opacity(0.8)
+
+            Image(systemName: item.symbol)
+                .font(.system(size: 86, weight: .medium))
+                .foregroundStyle(.white.opacity(0.2))
+                .offset(x: 48, y: 12)
+
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [Color.black.opacity(0.0), Color.black.opacity(0.62)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Night Read")
+                    .font(.system(size: 11, weight: .black))
+                    .tracking(0.8)
+                    .foregroundStyle(DS.accent)
+                Text(item.title)
+                    .font(.system(size: 24, weight: .bold, design: .serif))
+                    .tracking(-0.4)
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+            }
+            .padding(14)
+        }
+        .frame(height: 220)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .overlay(
+            RoundedRectangle(cornerRadius: 22)
+                .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+        )
     }
 
     private var actionRail: some View {
@@ -296,7 +626,7 @@ struct FreeReadCard: View {
                         .font(.system(size: 23, weight: .bold))
                         .foregroundStyle(isLiked ? .red : .white)
                         .frame(width: 48, height: 48)
-                        .background(Color.black.opacity(0.28))
+                        .background(Color.black.opacity(0.32))
                         .clipShape(Circle())
 
                     Text(formatCount(likeCount))
@@ -312,7 +642,7 @@ struct FreeReadCard: View {
                         .font(.system(size: 20, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(width: 48, height: 48)
-                        .background(Color.black.opacity(0.28))
+                        .background(Color.black.opacity(0.32))
                         .clipShape(Circle())
 
                     Text("Share")
@@ -334,6 +664,37 @@ struct FreeReadCard: View {
     }
 }
 
+struct StarFieldOverlay: View {
+    let seed: Int
+    let starCount: Int
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack {
+                ForEach(0..<starCount, id: \.self) { index in
+                    let xRatio = pseudoRandom(index, salt: 17)
+                    let yRatio = pseudoRandom(index, salt: 41)
+                    let starSize = 1.0 + pseudoRandom(index, salt: 73) * 2.8
+                    let alpha = 0.18 + pseudoRandom(index, salt: 101) * 0.72
+
+                    Circle()
+                        .fill(Color.white.opacity(alpha))
+                        .frame(width: starSize, height: starSize)
+                        .position(
+                            x: xRatio * geo.size.width,
+                            y: yRatio * geo.size.height
+                        )
+                }
+            }
+        }
+    }
+
+    private func pseudoRandom(_ index: Int, salt: Int) -> CGFloat {
+        let value = (seed * (index + 11) + salt * 1_187 + index * 373) % 997
+        return CGFloat(value) / 997.0
+    }
+}
+
 // MARK: - Home View
 
 struct HomeView: View {
@@ -346,12 +707,12 @@ struct HomeView: View {
     @AppStorage("personalizationPrompt") private var personalizationPrompt = ""
 
     private let discoverTopics: [(icon: String, title: String, color: Color, category: PassageCategory)] = [
-        ("person.crop.circle.badge.checkmark", "Self-Growth", Color(hex: "9BA96B"), .psychology),
-        ("bubble.left.and.text.bubble.right", "Communication", Color(hex: "C7AE73"), .philosophy),
-        ("briefcase", "Career & Business", Color(hex: "A87757"), .economics),
-        ("book.closed", "Fiction", Color(hex: "8F9978"), .literature),
-        ("banknote", "Finance & Economics", Color(hex: "7A8F59"), .economics),
-        ("heart", "Relationships", Color(hex: "B7846A"), .psychology),
+        ("person.crop.circle.badge.checkmark", "Self-Growth", Color(hex: "8DC4FF"), .psychology),
+        ("bubble.left.and.text.bubble.right", "Communication", Color(hex: "9FD9FF"), .philosophy),
+        ("briefcase", "Career & Business", Color(hex: "7AB2F5"), .economics),
+        ("book.closed", "Fiction", Color(hex: "A5BCFF"), .literature),
+        ("banknote", "Finance & Economics", Color(hex: "6DA2F2"), .economics),
+        ("heart", "Relationships", Color(hex: "91CCFF"), .psychology),
     ]
 
     private let moodPrompts: [(title: String, subtitle: String)] = [
@@ -650,7 +1011,7 @@ struct CreateLessonPromptCard: View {
             .padding(16)
             .background(
                 LinearGradient(
-                    colors: [Color(hex: "2A2418"), Color(hex: "1E2417"), Color(hex: "162013")],
+                    colors: [Color(hex: "1B2C57"), Color(hex: "152447"), Color(hex: "0D1733")],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -995,7 +1356,7 @@ struct PersonalizationPlanView: View {
         .padding(.vertical, 10)
         .background(
             LinearGradient(
-                colors: [Color(hex: "A89A7A"), Color(hex: "C2B58E"), Color(hex: "8E8272")],
+                colors: [Color(hex: "89A9E5"), Color(hex: "A3C8FF"), Color(hex: "6E8FCF")],
                 startPoint: .leading,
                 endPoint: .trailing
             )

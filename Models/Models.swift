@@ -28,14 +28,14 @@ enum PassageCategory: String, Codable, CaseIterable {
     
     var color: Color {
         switch self {
-        case .science: return Color(hex: "9BA96B")
-        case .history: return Color(hex: "B78659")
-        case .philosophy: return Color(hex: "8E9778")
-        case .economics: return Color(hex: "6F8958")
-        case .psychology: return Color(hex: "7F8E62")
-        case .literature: return Color(hex: "A87962")
-        case .mathematics: return Color(hex: "C3A56A")
-        case .technology: return Color(hex: "7A8651")
+        case .science: return Color(hex: "74C8FF")
+        case .history: return Color(hex: "9AB8FF")
+        case .philosophy: return Color(hex: "8FD2F5")
+        case .economics: return Color(hex: "7AB8FF")
+        case .psychology: return Color(hex: "A5BEFF")
+        case .literature: return Color(hex: "89B0F0")
+        case .mathematics: return Color(hex: "8FDFFF")
+        case .technology: return Color(hex: "6DA2F2")
         }
     }
     

@@ -14,7 +14,7 @@ struct SplashView: View {
             RoundedRectangle(cornerRadius: 22)
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "D8C695"), Color(hex: "A48E5A")],
+                        colors: [Color(hex: "A9D5FF"), Color(hex: "5F91DC")],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -25,7 +25,7 @@ struct SplashView: View {
                         .font(.system(size: 36, weight: .semibold))
                         .foregroundStyle(.black)
                 )
-                .shadow(color: Color(hex: "C8B47A").opacity(0.26), radius: 30)
+                .shadow(color: Color(hex: "83B6FF").opacity(0.3), radius: 30)
                 .scaleEffect(iconScale)
                 .opacity(iconOpacity)
             

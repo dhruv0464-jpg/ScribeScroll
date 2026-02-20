@@ -70,7 +70,7 @@ struct PaywallView: View {
     var body: some View {
         ZStack {
             LinearGradient(
-                colors: [Color(hex: "12130F"), Color(hex: "0D0F0B"), DS.bg],
+                colors: [Color(hex: "0F1730"), Color(hex: "091126"), DS.bg],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -154,7 +154,7 @@ struct PaywallView: View {
             RoundedRectangle(cornerRadius: 22)
                 .fill(
                     LinearGradient(
-                        colors: [Color(hex: "D9CAA0"), DS.accent, Color(hex: "A3925C")],
+                        colors: [Color(hex: "D2E8FF"), DS.accent, Color(hex: "80B8FF")],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
