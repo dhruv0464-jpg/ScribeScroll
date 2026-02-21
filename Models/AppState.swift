@@ -59,6 +59,7 @@ enum MainTab: String, CaseIterable {
 class AppState: ObservableObject {
     static let dailyFreeUnlockLimit = 3
     static let dailyFreeReadLimit = 5
+    static let disablePaywallsForTesting = true
 
     @Published var currentScreen: AppScreen = .splash
     @Published var selectedTab: MainTab = .home
@@ -82,6 +83,10 @@ class AppState: ObservableObject {
     @AppStorage("freeReadCreditsRemaining") var freeReadCreditsRemaining = AppState.dailyFreeReadLimit
     @AppStorage("lastReadCreditResetAt") private var lastReadCreditResetAt: Double = 0
 
+    var hasUnlimitedAccess: Bool {
+        isPremiumUser || Self.disablePaywallsForTesting
+    }
+
     init() {
         refreshDailyUnlockCreditsIfNeeded()
     }
@@ -94,7 +99,7 @@ class AppState: ObservableObject {
     
     func completeOnboarding() {
         hasCompletedOnboarding = true
-        if isPremiumUser {
+        if hasUnlimitedAccess {
             goHome()
         } else {
             presentPaywall(from: .launch)
@@ -108,6 +113,10 @@ class AppState: ObservableObject {
     }
 
     func presentPaywall(from entryPoint: PaywallEntryPoint) {
+        if Self.disablePaywallsForTesting {
+            goHome()
+            return
+        }
         paywallEntryPoint = entryPoint
         navigate(to: .paywall)
     }
@@ -119,7 +128,7 @@ class AppState: ObservableObject {
             return
         }
 
-        if isPremiumUser {
+        if hasUnlimitedAccess {
             navigate(to: .main)
         } else {
             presentPaywall(from: .launch)
@@ -127,11 +136,11 @@ class AppState: ObservableObject {
     }
 
     var canUnlockBlockedApps: Bool {
-        isPremiumUser || freeUnlockCreditsRemaining > 0
+        hasUnlimitedAccess || freeUnlockCreditsRemaining > 0
     }
 
     var canStartFreeRead: Bool {
-        isPremiumUser || freeReadCreditsRemaining > 0
+        hasUnlimitedAccess || freeReadCreditsRemaining > 0
     }
 
     func markPassageReadyForQuiz(_ passageID: Int) {
@@ -145,7 +154,7 @@ class AppState: ObservableObject {
     @discardableResult
     func consumeUnlockCreditIfNeeded() -> Bool {
         refreshDailyUnlockCreditsIfNeeded()
-        guard !isPremiumUser else { return true }
+        guard !hasUnlimitedAccess else { return true }
         guard freeUnlockCreditsRemaining > 0 else {
             return false
         }
@@ -157,7 +166,7 @@ class AppState: ObservableObject {
     @discardableResult
     func consumeReadCreditIfNeeded() -> Bool {
         refreshDailyUnlockCreditsIfNeeded()
-        guard !isPremiumUser else { return true }
+        guard !hasUnlimitedAccess else { return true }
         guard freeReadCreditsRemaining > 0 else {
             return false
         }
@@ -180,7 +189,7 @@ class AppState: ObservableObject {
     }
 
     func refreshDailyUnlockCreditsIfNeeded(referenceDate: Date = Date()) {
-        guard !isPremiumUser else {
+        guard !hasUnlimitedAccess else {
             freeUnlockCreditsRemaining = AppState.dailyFreeUnlockLimit
             freeReadCreditsRemaining = AppState.dailyFreeReadLimit
             lastUnlockCreditResetAt = referenceDate.timeIntervalSince1970

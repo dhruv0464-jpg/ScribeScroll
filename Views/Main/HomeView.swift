@@ -1076,7 +1076,7 @@ struct HomeView: View {
                     UnlockBudgetCard()
                     .padding(.bottom, 12)
 
-                    if !appState.isPremiumUser {
+                    if !appState.hasUnlimitedAccess {
                         UpgradeStrip {
                             appState.presentPaywall(from: .settings)
                         }
@@ -1687,52 +1687,222 @@ struct PersonalizationPlanCard: View {
     }
 }
 
+struct SnappyCardButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .brightness(configuration.isPressed ? -0.03 : 0)
+            .animation(.spring(response: 0.24, dampingFraction: 0.78), value: configuration.isPressed)
+    }
+}
+
 struct FeaturedLessonCard: View {
     let passage: Passage
     var compact: Bool = false
     let action: () -> Void
 
-    private var cardWidth: CGFloat { compact ? 150 : 176 }
-    private var cardHeight: CGFloat { compact ? 188 : 246 }
+    private var cardWidth: CGFloat { compact ? 152 : 182 }
+    private var cardHeight: CGFloat { compact ? 194 : 252 }
     private var sourceCount: Int { 4 + ((passage.id * 7) % 35) }
+    private var visualSeed: Int {
+        passage.title.unicodeScalars.reduce(passage.id * 31) { current, scalar in
+            (current * 33 + Int(scalar.value)) % 10_000
+        }
+    }
+    private var titleFontSize: CGFloat {
+        let length = passage.title.count
+        if compact {
+            if length <= 34 { return 31 }
+            if length <= 52 { return 27 }
+            return 23
+        }
+        if length <= 34 { return 37 }
+        if length <= 56 { return 32 }
+        return 28
+    }
+    private var categoryLabel: String { passage.category.rawValue.uppercased() }
+    private var symbolName: String { passage.category.icon }
+    private var sourceGlyphs: [String] {
+        let titleInitials = passage.title
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .filter { !$0.isEmpty }
+            .prefix(4)
+            .compactMap { $0.first.map { String($0).uppercased() } }
+        if titleInitials.count == 4 { return Array(titleInitials) }
+
+        let sourceInitials = passage.source
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .filter { !$0.isEmpty }
+            .prefix(4)
+            .compactMap { $0.first.map { String($0).uppercased() } }
+
+        let merged = Array((titleInitials + sourceInitials).prefix(4))
+        if merged.count == 4 { return merged }
+        return ["R", "T", "U", "K"]
+    }
+    private var coverGradient: [Color] {
+        switch passage.category {
+        case .science:
+            return [Color(hex: "22413B"), Color(hex: "2B645A"), Color(hex: "18312C")]
+        case .history:
+            return [Color(hex: "3A2E1C"), Color(hex: "6B4A2B"), Color(hex: "231A10")]
+        case .philosophy:
+            return [Color(hex: "2F3223"), Color(hex: "56613A"), Color(hex: "1B2014")]
+        case .economics:
+            return [Color(hex: "2B3D2C"), Color(hex: "4D6B49"), Color(hex: "192518")]
+        case .psychology:
+            return [Color(hex: "3B2C2A"), Color(hex: "6B4A44"), Color(hex: "251917")]
+        case .literature:
+            return [Color(hex: "2B2F3B"), Color(hex: "4A5570"), Color(hex: "171B23")]
+        case .mathematics:
+            return [Color(hex: "2A3138"), Color(hex: "3E5464"), Color(hex: "161D24")]
+        case .technology:
+            return [Color(hex: "1D2B3A"), Color(hex: "315D7A"), Color(hex: "121B25")]
+        }
+    }
+    private var footerColors: [Color] {
+        [Color.white.opacity(0.18), Color.white.opacity(0.08), Color.white.opacity(0.03)]
+    }
 
     var body: some View {
         Button(action: action) {
-            ZStack(alignment: .bottomLeading) {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                passage.category.color.opacity(0.85),
-                                Color.black.opacity(0.75),
-                                passage.category.color.opacity(0.35),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(passage.title)
-                        .font(.system(size: compact ? 20 : 28, weight: .bold, design: .serif))
-                        .tracking(-0.4)
-                        .foregroundStyle(.white)
-                        .lineLimit(compact ? 3 : 4)
-                        .padding(.bottom, 8)
-
-                    Text("\(sourceCount) sources")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.8))
-                }
-                .padding(12)
+            VStack(spacing: 0) {
+                coverSection
+                footerSection
             }
             .frame(width: cardWidth, height: cardHeight)
+            .background(Color.black.opacity(0.42))
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
                     .strokeBorder(Color.white.opacity(0.12), lineWidth: 1)
             )
+            .shadow(color: .black.opacity(0.34), radius: 12, x: 0, y: 10)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SnappyCardButtonStyle())
+    }
+
+    private var coverSection: some View {
+        ZStack(alignment: .topLeading) {
+            LinearGradient(
+                colors: coverGradient,
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            coverPattern
+
+            VStack(alignment: .leading, spacing: compact ? 8 : 10) {
+                Text(categoryLabel)
+                    .font(.system(size: compact ? 9 : 10, weight: .black))
+                    .tracking(0.8)
+                    .foregroundStyle(.black.opacity(0.85))
+                    .padding(.horizontal, compact ? 8 : 10)
+                    .padding(.vertical, 4)
+                    .background(passage.category.color.opacity(0.95))
+                    .clipShape(Capsule())
+
+                Spacer(minLength: 0)
+
+                Text(passage.title)
+                    .font(.system(size: titleFontSize, weight: .bold, design: .serif))
+                    .tracking(-0.6)
+                    .foregroundStyle(.white)
+                    .lineLimit(compact ? 4 : 5)
+                    .minimumScaleFactor(0.72)
+                    .allowsTightening(true)
+                    .shadow(color: .black.opacity(0.35), radius: 6, x: 0, y: 3)
+            }
+            .padding(.horizontal, compact ? 10 : 12)
+            .padding(.vertical, compact ? 10 : 12)
+
+            VStack {
+                HStack {
+                    Spacer()
+                    Image(systemName: symbolName)
+                        .font(.system(size: compact ? 24 : 30, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.9))
+                        .padding(compact ? 9 : 11)
+                        .background(Color.black.opacity(0.22))
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .strokeBorder(Color.white.opacity(0.24), lineWidth: 1)
+                        )
+                }
+                Spacer()
+            }
+            .padding(compact ? 10 : 12)
+        }
+        .frame(height: cardHeight * 0.72)
+    }
+
+    private var footerSection: some View {
+        HStack(spacing: 8) {
+            HStack(spacing: -5) {
+                ForEach(Array(sourceGlyphs.enumerated()), id: \.offset) { index, glyph in
+                    Circle()
+                        .fill(avatarColor(index))
+                        .frame(width: compact ? 17 : 19, height: compact ? 17 : 19)
+                        .overlay(
+                            Text(glyph)
+                                .font(.system(size: compact ? 8 : 9, weight: .bold))
+                                .foregroundStyle(.black.opacity(0.78))
+                        )
+                        .overlay(
+                            Circle()
+                                .strokeBorder(Color.black.opacity(0.3), lineWidth: 0.5)
+                        )
+                }
+            }
+
+            Text("\(sourceCount) sources")
+                .font(.system(size: compact ? 11 : 12, weight: .bold))
+                .foregroundStyle(.white.opacity(0.92))
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, compact ? 10 : 12)
+        .padding(.vertical, compact ? 7 : 8)
+        .background(
+            LinearGradient(
+                colors: footerColors,
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+    }
+
+    private var coverPattern: some View {
+        ZStack {
+            Circle()
+                .fill(Color.white.opacity(0.18))
+                .frame(width: compact ? 88 : 116, height: compact ? 88 : 116)
+                .offset(x: compact ? 80 : 98, y: compact ? -24 : -30)
+
+            RoundedRectangle(cornerRadius: compact ? 16 : 20, style: .continuous)
+                .stroke(Color.white.opacity(0.24), lineWidth: 1)
+                .frame(width: compact ? 68 : 88, height: compact ? 92 : 114)
+                .rotationEffect(.degrees(Double((visualSeed % 10) - 5)))
+                .offset(x: compact ? 30 : 38, y: compact ? 34 : 44)
+
+            Circle()
+                .stroke(Color.white.opacity(0.17), lineWidth: 1)
+                .frame(width: compact ? 24 : 32, height: compact ? 24 : 32)
+                .offset(x: compact ? 24 : 30, y: compact ? 18 : 24)
+        }
+    }
+
+    private func avatarColor(_ index: Int) -> Color {
+        let colors = [
+            Color(hex: "E8CC7A"),
+            Color(hex: "B0D4A3"),
+            Color(hex: "AFC6E8"),
+            Color(hex: "E8BFA4"),
+            Color(hex: "D3B3E6"),
+        ]
+        let seed = (visualSeed + index * 11) % colors.count
+        return colors[seed]
     }
 }
 
@@ -1766,7 +1936,7 @@ struct MoodPromptCard: View {
                     .strokeBorder(DS.separator, lineWidth: 1)
             )
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SnappyCardButtonStyle())
     }
 }
 
@@ -1779,7 +1949,7 @@ struct UnlockBudgetCard: View {
                 .fill(DS.accent.opacity(0.16))
                 .frame(width: 44, height: 44)
                 .overlay(
-                    Image(systemName: appState.isPremiumUser ? "infinity" : "lock.open.fill")
+                    Image(systemName: appState.hasUnlimitedAccess ? "infinity" : "lock.open.fill")
                         .font(.system(size: 17, weight: .bold))
                         .foregroundStyle(DS.accent)
                 )
@@ -1787,7 +1957,7 @@ struct UnlockBudgetCard: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Today's Unlock Budget")
                     .font(.system(size: 14, weight: .semibold))
-                Text(appState.isPremiumUser
+                Text(appState.hasUnlimitedAccess
                      ? "Unlimited unlocks and unlimited reads with Pro"
                      : "\(appState.freeUnlockCreditsRemaining)/\(AppState.dailyFreeUnlockLimit) free unlocks · \(appState.freeReadCreditsRemaining)/\(AppState.dailyFreeReadLimit) free reads")
                     .font(.system(size: 12, weight: .medium))

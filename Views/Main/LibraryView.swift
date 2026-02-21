@@ -23,7 +23,7 @@ struct LibraryView: View {
     }
 
     private func isPremiumLocked(_ passage: Passage) -> Bool {
-        !appState.isPremiumUser && premiumCategories.contains(passage.category)
+        !appState.hasUnlimitedAccess && premiumCategories.contains(passage.category)
     }
     
     var body: some View {
@@ -59,7 +59,7 @@ struct LibraryView: View {
                     )
                     .padding(.bottom, 12)
 
-                    if !appState.isPremiumUser {
+                    if !appState.hasUnlimitedAccess {
                         HStack(spacing: 8) {
                             Image(systemName: "lock.fill")
                                 .font(.system(size: 11, weight: .bold))

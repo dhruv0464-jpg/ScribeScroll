@@ -202,7 +202,7 @@ struct SettingsView: View {
                         showScreenTimeSetup = true
                     }
 
-                    if !appState.isPremiumUser {
+                    if !appState.hasUnlimitedAccess {
                         PrimaryButton(title: "Upgrade to Pro", icon: "crown.fill") {
                             appState.presentPaywall(from: .settings)
                         }
@@ -215,11 +215,11 @@ struct SettingsView: View {
                         })
                         NavRow(
                             icon: "⭐",
-                            title: appState.isPremiumUser ? "Pro Membership" : "Upgrade to Pro",
-                            value: appState.isPremiumUser ? "Active" : nil,
-                            valueColor: appState.isPremiumUser ? DS.success : DS.accent,
+                            title: appState.hasUnlimitedAccess ? "Pro Membership" : "Upgrade to Pro",
+                            value: appState.hasUnlimitedAccess ? "Active" : nil,
+                            valueColor: appState.hasUnlimitedAccess ? DS.success : DS.accent,
                             action: {
-                                if appState.isPremiumUser {
+                                if appState.hasUnlimitedAccess {
                                     showMembershipAlert = true
                                 } else {
                                     appState.presentPaywall(from: .settings)
@@ -296,7 +296,7 @@ struct SettingsView: View {
                     Text("Account")
                         .font(.system(size: 28, weight: .bold, design: .serif))
                     Text("Name: \(appState.userName.isEmpty ? "Reader" : appState.userName)")
-                    Text("Plan: \(appState.isPremiumUser ? "Pro" : "Free")")
+                    Text("Plan: \(appState.hasUnlimitedAccess ? "Pro" : "Free")")
                     Text("Daily goal: \(appState.dailyGoal) readings")
                     Text("Notifications: \(appState.notificationsEnabled ? "On" : "Off")")
                     Spacer()

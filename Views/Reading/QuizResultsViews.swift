@@ -280,7 +280,7 @@ struct ResultsView: View {
                 .foregroundStyle(DS.label4)
                 .padding(.bottom, 36)
 
-            if passed && isUnlockFlow && !appState.isPremiumUser {
+            if passed && isUnlockFlow && !appState.hasUnlimitedAccess {
                 Text("\(appState.freeUnlockCreditsRemaining) free unlocks left today")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(DS.label4)
@@ -400,7 +400,7 @@ struct BlockedOverlayView: View {
                             .padding(.horizontal, 20)
                             .padding(.bottom, 12)
 
-                        if !appState.isPremiumUser {
+                        if !appState.hasUnlimitedAccess {
                             Text("\(appState.freeUnlockCreditsRemaining) free unlocks remaining today")
                                 .font(.system(size: 12, weight: .semibold))
                                 .foregroundStyle(DS.label4)
